@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cover Letter Generator — Christopher Graves</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161d;
+      --surface2: #181b24;
+      --border: #1e2330;
+      --border-focus: #4f8ef7;
+      --accent: #4f8ef7;
+      --accent2: #7dd3c0;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --dim: #9ca3af;
+      --error: #f87171;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(79,142,247,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,142,247,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 4rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--accent); }
+
+    .header-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    header h1 span { color: var(--accent); }
+
+    .disclosure {
+      background: rgba(79,142,247,0.07);
+      border: 1px solid rgba(79,142,247,0.2);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      font-size: 0.85rem;
+      color: var(--dim);
+      line-height: 1.6;
+      margin-top: 1.25rem;
+    }
+
+    .disclosure strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.7s ease 0.15s both;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .field {
+      margin-bottom: 1.5rem;
+    }
+
+    .field label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .field label .required {
+      color: var(--accent);
+      margin-left: 0.25rem;
+    }
+
+    .field label .optional {
+      color: var(--muted);
+      font-size: 0.65rem;
+      margin-left: 0.4rem;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 300;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      resize: vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.1);
+    }
+
+    .field textarea { min-height: 130px; }
+
+    .field.error input,
+    .field.error textarea {
+      border-color: var(--error);
+    }
+
+    .error-msg {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--error);
+      margin-top: 0.4rem;
+      display: none;
+    }
+
+    .field.error .error-msg { display: block; }
+
+    .generate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .generate-btn:hover:not(:disabled) {
+      background: #3a7de8;
+      box-shadow: 0 4px 20px rgba(79,142,247,0.3);
+      transform: translateY(-1px);
+    }
+
+    .generate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .generate-btn.loading .spinner { display: block; }
+    .generate-btn.loading .btn-text { opacity: 0.7; }
+
+    /* ── OUTPUT ── */
+    .output-section {
+      padding: 2.5rem 0;
+      animation: fadeUp 0.6s ease both;
+      display: none;
+    }
+
+    .output-section.visible { display: block; }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--dim);
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .action-btn.copied {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .cover-letter-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2.5rem;
+      font-size: 0.92rem;
+      color: var(--dim);
+      line-height: 1.85;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .cover-letter-box p {
+      margin-bottom: 1.2em;
+    }
+
+    .cover-letter-box p:last-child { margin-bottom: 0; }
+
+    .regenerate-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1rem;
+    }
+
+    .regenerate-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 0;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      .cover-letter-box { padding: 1.5rem; }
+      .output-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <a href="/" class="back-link">← graves-tech.dev</a>
+      <div class="header-tag">AI-Powered Tool</div>
+      <h1>Generate a <span>Cover Letter</span></h1>
+      <div class="disclosure">
+        <strong>Transparency notice:</strong> This page uses an AI agent (Claude by Anthropic) to generate a custom cover letter based on my resume. I built this intentionally — leveraging AI to work smarter is a core part of how I operate. The letter will be tailored to your role using my actual background and experience.
+      </div>
+    </header>
+
+    <section class="form-section">
+      <div class="section-label">Position Details</div>
+
+      <div class="field" id="field-title">
+        <label for="job-title">Job Title <span class="required">*</span></label>
+        <input type="text" id="job-title" placeholder="e.g. M365 Engineer, Identity Administrator" />
+        <div class="error-msg">Job title is required.</div>
+      </div>
+
+      <div class="field">
+        <label for="company">Company Name <span class="optional">(optional)</span></label>
+        <input type="text" id="company" placeholder="e.g. Acme Corporation" />
+      </div>
+
+      <div class="field">
+        <label for="description">Job Description <span class="optional">(optional — paste for a more tailored letter)</span></label>
+        <textarea id="description" placeholder="Paste the job description here..."></textarea>
+      </div>
+
+      <button class="generate-btn" id="generate-btn" onclick="generate()">
+        <div class="spinner"></div>
+        <span class="btn-text">Generate Cover Letter</span>
+      </button>
+    </section>
+
+    <section class="output-section" id="output-section">
+      <div class="output-header">
+        <div class="section-label" style="margin-bottom:0;flex:1;">Generated Letter</div>
+        <div class="output-actions">
+          <button class="action-btn" id="copy-btn" onclick="copyLetter()">
+            ⎘ Copy
+          </button>
+          <button class="action-btn" onclick="printLetter()">
+            ⎙ Print
+          </button>
+        </div>
+      </div>
+      <div class="cover-letter-box" id="cover-letter-box"></div>
+      <button class="regenerate-btn" onclick="generate()">
+        ↺ Regenerate
+      </button>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="container">
+      graves-tech.dev · ai cover letter generator · powered by claude
+    </div>
+  </footer>
+
+  <script>
+    // ── CONFIG ──
+    // Replace this with your Cloudflare Worker URL after deploying
+    const WORKER_URL = 'https://sweet-river-e9d6.graves17.workers.dev';
+
+    const RESUME = `
+Christopher Graves
+Domain Administration | Microsoft 365 Administration
+Kenova, WV | chris@graves-tech.dev | (304) 521-7919
+
+PROFESSIONAL SUMMARY
+Experienced IT professional with a strong background in enterprise identity, access management, and Microsoft 365 environments. Hands-on experience supporting Active Directory, Entra ID, MFA platforms, and endpoint management across hybrid on-premises and cloud infrastructures. Proven progression from user support into advanced administration, with a focus on security, automation, and reliable access to critical systems. Comfortable operating in regulated environments and collaborating across technical and non-technical teams.
+
+TECHNICAL SKILLS
+Identity & Access Management: Active Directory (Multi-Domain/Multi-Forest), Entra ID (Azure Active Directory), Group Policy (GPO) Administration, Privileged Identity Management (PIM), Identity Governance (Access Reviews, Lifecycle Management), Cisco Duo Administration, Okta Administration, Delinea Administration (PAM, credential vaulting)
+
+Microsoft 365 & Cloud: Exchange Online (Hybrid, Mailbox Administration, Retention), Microsoft Intune (Windows & macOS Device Management), Microsoft Purview (Retention & Compliance Policies), SharePoint Online & OneDrive Administration, Microsoft Teams Administration, Conditional Access, Multi-Factor Authentication (MFA)
+
+Scripting & Automation: PowerShell (Automation & Administrative Scripting), Microsoft Graph PowerShell SDK, Exchange Online PowerShell
+
+Infrastructure & Systems: Windows Server Administration, DNS, DHCP, Group Policy Processing, Hybrid Identity (On-Prem Active Directory ↔ Entra ID)
+
+Tools & Platforms: ServiceNow (ITSM / Incident Management), Azure Portal, Microsoft 365 Admin Centers
+
+PROFESSIONAL EXPERIENCE
+
+Marshall Health Network — 2023–Present
+Enterprise IT Administration
+- Administer and support enterprise identity and access systems across on-premises and cloud environments
+- Manage Active Directory and Entra ID, including user, group, and access lifecycle management
+- Implement and maintain multi-factor authentication using Cisco Duo and Conditional Access
+- Support Microsoft 365 services including Exchange Online, Intune, and endpoint management
+- Develop and maintain PowerShell automation for administrative and operational tasks
+- Collaborate with security, infrastructure, and application teams to ensure reliable access to critical systems
+- Support privileged access workflows using Delinea for administrative account management and credential security
+
+St. Mary's Medical Center — 2022–2023
+IT Support / Systems Support
+- Provided technical support for end users, devices, and core IT services in a healthcare environment
+- Assisted with hardware support, account access issues, and device deployment
+
+St. Mary's Medical Center — 2016–2022
+Sterile Processing Technician
+
+Richwood Industries — 2014–2016
+CAD Drafter
+
+CERTIFICATIONS
+- CBSPD Certification (Sterile Processing) — 2021
+- Microsoft SC-300 (Identity & Access Administrator) — In Progress
+
+EDUCATION
+- Associate of Applied Science (AAS), Manufacturing Engineering — Mountwest Community & Technical College, 2013
+- High School Diploma — Spring Valley High School, 2009
+    `.trim();
+
+    async function generate() {
+      const titleField = document.getElementById('field-title');
+      const jobTitle = document.getElementById('job-title').value.trim();
+      const company = document.getElementById('company').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const btn = document.getElementById('generate-btn');
+      const outputSection = document.getElementById('output-section');
+      const box = document.getElementById('cover-letter-box');
+
+      // Validate
+      if (!jobTitle) {
+        titleField.classList.add('error');
+        document.getElementById('job-title').focus();
+        return;
+      }
+      titleField.classList.remove('error');
+
+      // Loading state
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.querySelector('.btn-text').textContent = 'Generating...';
+      outputSection.classList.remove('visible');
+
+      // Build prompt
+      let prompt = `You are generating a professional cover letter on behalf of Christopher Graves for a job application.\n\n`;
+      prompt += `Here is Christopher's resume:\n\n${RESUME}\n\n`;
+      prompt += `The position being applied for is: ${jobTitle}\n`;
+      if (company) prompt += `The company is: ${company}\n`;
+      if (description) prompt += `\nJob description:\n${description}\n`;
+      prompt += `\nWrite a compelling, genuine, and concise cover letter (3-4 paragraphs) from Christopher to the hiring manager. `;
+      prompt += `Tailor it specifically to the role and company if provided. `;
+      prompt += `Use a confident but not arrogant tone. Do not use generic filler phrases. `;
+      prompt += `Format it as a proper letter starting with "Dear Hiring Manager," and ending with a professional sign-off from Christopher Graves. `;
+      prompt += `Do not include a date or address header — just the salutation through the signature.`;
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+
+        if (!response.ok) throw new Error('Worker error');
+
+        const data = await response.json();
+        const letter = data.content?.[0]?.text || 'Unable to generate letter. Please try again.';
+
+        // Render output
+        box.innerHTML = '';
+        letter.split('\n\n').forEach(para => {
+          if (para.trim()) {
+            const p = document.createElement('p');
+            p.textContent = para.trim();
+            box.appendChild(p);
+          }
+        });
+
+        outputSection.classList.add('visible');
+        outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      } catch (err) {
+        box.innerHTML = '<p style="color:var(--error)">Something went wrong generating the letter. Please try again.</p>';
+        outputSection.classList.add('visible');
+      }
+
+      // Reset button
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      btn.querySelector('.btn-text').textContent = 'Generate Cover Letter';
+    }
+
+    function copyLetter() {
+      const box = document.getElementById('cover-letter-box');
+      const text = Array.from(box.querySelectorAll('p')).map(p => p.textContent).join('\n\n');
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '⎘ Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function printLetter() {
+      const box = document.getElementById('cover-letter-box');
+      const text = Array.from(box.querySelectorAll('p')).map(p => p.textContent).join('\n\n');
+      const win = window.open('', '_blank');
+      win.document.write(`
+        <html><head><title>Cover Letter — Christopher Graves</title>
+        <style>
+          body { font-family: Georgia, serif; font-size: 11pt; line-height: 1.8; max-width: 680px; margin: 60px auto; color: #1a1a1a; }
+          p { margin-bottom: 1.2em; }
+        </style></head><body>
+        ${text.split('\n\n').map(p => `<p>${p}</p>`).join('')}
+        </body></html>
+      `);
+      win.document.close();
+      win.print();
+    }
+
+    // Clear error on input
+    document.getElementById('job-title').addEventListener('input', () => {
+      document.getElementById('field-title').classList.remove('error');
+    });
+  </script>
+</body>
+</html>
